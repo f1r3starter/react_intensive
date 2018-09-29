@@ -12,7 +12,7 @@ import Styles from './styles.m.css';
 
 export default class Feed extends Component {
     state = {
-        posts:   [{ id: 123, comment: '1123', created: 1538233989 }],
+        posts:   [{ id: 123, comment: 'Test 1', created: 1538233989 }, { id: 789, comment: 'Test 2', created: 1538232989 }],
         spinner: { isSpinning: false },
     };
     render () {
