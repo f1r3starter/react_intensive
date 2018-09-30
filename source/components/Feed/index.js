@@ -1,5 +1,6 @@
 // Core
 import React, { Component } from 'react';
+import moment from 'moment';
 
 // Components
 import Composer from 'components/Composer';
@@ -9,12 +10,34 @@ import Spinner from 'components/Spinner';
 
 // Instruments
 import Styles from './styles.m.css';
+import { getUniqueID, delay } from "../../instruments";
 
 export default class Feed extends Component {
+    constructor () {
+        super();
+
+        this._createPost = this._createPost.bind(this);
+    }
+
     state = {
         posts:   [{ id: 123, comment: 'Test 1', created: 1538233989 }, { id: 789, comment: 'Test 2', created: 1538232989 }],
         spinner: { isSpinning: false },
     };
+
+    async _createPost (comment) {
+        const post = {
+            id:      getUniqueID(),
+            created: moment().unix(),
+            comment,
+        };
+
+        await delay(1200);
+
+        this.setState(({ posts }) => ({
+            posts: [post, ...posts],
+        }));
+    }
+
     render () {
         const { posts, spinner } = this.state;
 
@@ -26,7 +49,7 @@ export default class Feed extends Component {
             <section className = { Styles.feed }>
                 <Spinner { ...spinner } />
                 <StatusBar />
-                <Composer />
+                <Composer _createPost = { this._createPost } />
                 { postsJSX }
             </section>
         );
