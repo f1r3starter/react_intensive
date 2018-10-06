@@ -4,12 +4,14 @@ import moment from 'moment';
 import { func, string, number, array } from 'prop-types';
 
 // Components
+import { withProfile } from "../HOC/withProfile";
 import { Consumer } from 'components/HOC/withProfile';
 import Like from 'components/Like';
 
 // Instruments
 import Styles from './styles.m.css';
 
+@withProfile
 export default class Post extends Component {
     static propTypes = {
         _likePost:   func.isRequired,
@@ -20,35 +22,37 @@ export default class Post extends Component {
         likes:       array.isRequired,
     };
 
-    constructor () {
-        super();
-
-        this._removePost = this._removePost.bind(this);
-    }
-
-    _removePost () {
+    _removePost = () => {
         const { _removePost, id } = this.props;
 
         _removePost(id);
-    }
+    };
 
     render () {
-        const { comment, created, _likePost, id, likes } = this.props;
+        const {
+            _likePost,
+            avatar,
+            comment,
+            created,
+            currentUserFirstName,
+            currentUserLastName,
+            id,
+            likes,
+        } = this.props;
 
         return (
             <Consumer>
-                {(context) => (
+                {() => (
                     <section className = { Styles.post }>
                         <span className = { Styles.cross } onClick = { this._removePost } />
-                        <img src = { context.avatar } />
-                        <a>{`${context.currentUserFirstName} ${context.currentUserLastName}`}</a>
+                        <img src = { avatar } />
+                        <a>{`${currentUserFirstName} ${currentUserLastName}`}</a>
                         <time>{moment.unix(created).format('MMMM D hh:mm:ss a')}</time>
                         <p> { comment } </p>
                         <Like
                             _likePost = { _likePost }
                             id = { id }
                             likes = { likes }
-                            { ...context }
                         />
                     </section>
                 )}
