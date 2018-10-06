@@ -12,11 +12,23 @@ import Styles from './styles.m.css';
 
 export default class Feed extends Component {
     state = {
-        posts:     [{ id: 123, comment: 'Test 1', created: 1538233989 }, { id: 789, comment: 'Test 2', created: 1538232989 }],
-        isLoading: false,
+        posts: [
+            {
+                id:      '123',
+                comment: 'Test 1',
+                created: 1538233989,
+            },
+            {
+                id:      '789',
+                comment: 'Test 2',
+                created: 1538232989,
+            }
+        ],
+        isSpinning: false,
     };
+
     render () {
-        const { posts, isLoading } = this.state;
+        const { posts, isSpinning } = this.state;
 
         const postsJSX = posts.map((post) => {
             return <Post key = { post.id } { ...post } />;
@@ -24,10 +36,10 @@ export default class Feed extends Component {
 
         return (
             <section className = { Styles.feed }>
-                <Spinner isSpinning = { isLoading } />
+                <Spinner isSpinning = { isSpinning } />
                 <StatusBar />
                 <Composer />
-                { postsJSX }
+                {postsJSX}
             </section>
         );
     }
