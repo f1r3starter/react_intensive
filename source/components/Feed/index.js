@@ -36,12 +36,12 @@ export default class Feed extends Component {
                 created: 1538232989,
                 likes:   [],
             }],
-        isPostsFetching: false,
+        isSpinning: false,
     };
 
     _setPostsFetchingState (state) {
         this.setState({
-            isPostsFetching: state,
+            isSpinning: state,
         });
     }
 
@@ -58,19 +58,20 @@ export default class Feed extends Component {
         await delay(1200);
 
         this.setState(({ posts }) => ({
-            posts:           [post, ...posts],
-            isPostsFetching: false,
+            posts:      [post, ...posts],
+            isSpinning: false,
         }));
     }
 
     async _likePost (id) {
         const { currentUserFirstName, currentUserLastName } = this.props;
+        const { posts } = this.state;
 
         this._setPostsFetchingState(true);
 
         await delay(1200);
 
-        const newPosts = this.state.posts.map((post) => {
+        const newPosts = posts.map((post) => {
             if (post.id === id) {
                 return {
                     ...post,
@@ -88,34 +89,42 @@ export default class Feed extends Component {
         });
 
         this.setState({
-            posts:           newPosts,
-            isPostsFetching: false,
+            posts:      newPosts,
+            isSpinning: false,
         });
     }
 
     async _removePost (id) {
+        const { posts } = this.state;
+
         this._setPostsFetchingState(true);
 
         await delay(1200);
 
-        const newPosts = this.state.posts.filter((post) => post.id !== id);
+        const newPosts = posts.filter((post) => post.id !== id);
 
         this.setState({
-            posts:           newPosts,
-            isPostsFetching: false,
+            posts:      newPosts,
+            isSpinning: false,
         });
     }
 
     render () {
-        const { posts, isPostsFetching } = this.state;
+        const { posts, isSpinning } = this.state;
 
         const postsJSX = posts.map((post) => {
-            return <Post key = { post.id } { ...post } _likePost = { this._likePost } _removePost = { this._removePost } />;
+            return (
+                <Post
+                    key = { post.id } { ...post }
+                    _likePost = { this._likePost }
+                    _removePost = { this._removePost }
+                />
+            );
         });
 
         return (
             <section className = { Styles.feed }>
-                <Spinner isSpinning = { isPostsFetching } />
+                <Spinner isSpinning = { isSpinning } />
                 <StatusBar />
                 <Composer _createPost = { this._createPost } />
                 {postsJSX}
