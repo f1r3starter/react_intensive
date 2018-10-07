@@ -4,6 +4,7 @@ import moment from 'moment';
 
 // Components
 import { withProfile } from "../HOC/withProfile";
+import Catcher from 'components/Catcher';
 import Composer from 'components/Composer';
 import Post from 'components/Post';
 import StatusBar from 'components/StatusBar';
@@ -12,30 +13,38 @@ import Spinner from 'components/Spinner';
 // Instruments
 import Styles from './styles.m.css';
 import { getUniqueID, delay } from "../../instruments";
+import { api } from '../../config/api';
 
 @withProfile
 export default class Feed extends Component {
 
     state = {
-        posts: [
-            {
-                id:      '123',
-                comment: 'Test 1',
-                created: 1538233989,
-                likes:   [],
-            },
-            {
-                id:      '789',
-                comment: 'Test 2',
-                created: 1538232989,
-                likes:   [],
-            }],
+        posts:      [],
         isSpinning: false,
     };
+
+    componentDidMount () {
+        this._fetchPosts();
+    }
 
     _setPostsFetchingState = (state) => {
         this.setState({
             isSpinning: state,
+        });
+    };
+
+    _fetchPosts = async () => {
+        this._setPostsFetchingState(true);
+
+        const response = await fetch(api, {
+            method: 'GET',
+        });
+
+        const { data: posts } = await response.json();
+
+        this.setState({
+            posts,
+            isSpinning: false,
         });
     };
 
@@ -108,12 +117,14 @@ export default class Feed extends Component {
 
         const postsJSX = posts.map((post) => {
             return (
+
                 <Post
                     _likePost = { this._likePost }
                     _removePost = { this._removePost }
                     key = { post.id }
                     { ...post }
                 />
+
             );
         });
 

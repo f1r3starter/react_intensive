@@ -34,8 +34,8 @@ export default class Post extends Component {
             avatar,
             comment,
             created,
-            currentUserFirstName,
-            currentUserLastName,
+            firstName,
+            lastName,
             id,
             likes,
         } = this.props;
@@ -46,7 +46,7 @@ export default class Post extends Component {
                     <section className = { Styles.post }>
                         <span className = { Styles.cross } onClick = { this._removePost } />
                         <img src = { avatar } />
-                        <a>{`${currentUserFirstName} ${currentUserLastName}`}</a>
+                        <a>{`${firstName} ${lastName}`}</a>
                         <time>{moment.unix(created).format('MMMM D hh:mm:ss a')}</time>
                         <p> { comment } </p>
                         <Like
