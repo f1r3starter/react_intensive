@@ -5,7 +5,6 @@ import { func, string, number, array } from 'prop-types';
 
 // Components
 import { withProfile } from "../HOC/withProfile";
-import { Consumer } from 'components/HOC/withProfile';
 import Like from 'components/Like';
 
 // Instruments
@@ -41,22 +40,18 @@ export default class Post extends Component {
         } = this.props;
 
         return (
-            <Consumer>
-                {() => (
-                    <section className = { Styles.post }>
-                        <span className = { Styles.cross } onClick = { this._removePost } />
-                        <img src = { avatar } />
-                        <a>{`${currentUserFirstName} ${currentUserLastName}`}</a>
-                        <time>{moment.unix(created).format('MMMM D hh:mm:ss a')}</time>
-                        <p> { comment } </p>
-                        <Like
-                            _likePost = { _likePost }
-                            id = { id }
-                            likes = { likes }
-                        />
-                    </section>
-                )}
-            </Consumer>
+            <section className = { Styles.post }>
+                <span className = { Styles.cross } onClick = { this._removePost } />
+                <img src = { avatar } />
+                <a>{`${currentUserFirstName} ${currentUserLastName}`}</a>
+                <time>{moment.unix(created).format('MMMM D hh:mm:ss a')}</time>
+                <p> {comment} </p>
+                <Like
+                    _likePost = { _likePost }
+                    id = { id }
+                    likes = { likes }
+                />
+            </section>
         );
     }
 }

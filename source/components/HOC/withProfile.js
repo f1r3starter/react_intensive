@@ -15,4 +15,4 @@ const withProfile = (Enhanceble) => {
     };
 };
 
-export { Provider, Consumer, withProfile };
+export { Provider, withProfile };
