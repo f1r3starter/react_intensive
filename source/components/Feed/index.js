@@ -143,8 +143,6 @@ export default class Feed extends Component {
 
         this._setPostsFetchingState(true);
 
-        this._setPostsFetchingState(true);
-
         await fetch(`${api}/${id}`, {
             method:  'DELETE',
             headers: {
