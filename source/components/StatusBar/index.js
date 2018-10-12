@@ -4,7 +4,6 @@ import cx from 'classnames';
 
 // Components
 import { withProfile } from "../HOC/withProfile";
-import { Consumer } from 'components/HOC/withProfile';
 
 // Instruments
 import Styles from './styles.m.css';
@@ -47,22 +46,18 @@ export default class StatusBar extends Component {
         const statusMessage = online ? 'Online' : 'Offline';
 
         return (
-            <Consumer>
-                {() => (
-                    <section className = { Styles.statusBar } >
-                        <div className = { statusStyle } >
+            <section className = { Styles.statusBar }>
+                <div className = { statusStyle } >
                             <div>{statusMessage}</div>
                             <span />
                         </div>
                         <button>
-                            <img src = { avatar } />
-                            <span> { currentUserFirstName } </span>
-                            &nbsp;
-                            <span> { currentUserLastName } </span>
-                        </button>
-                    </section>
-                )}
-            </Consumer>
+                    <img src = { avatar } />
+                    <span> {currentUserFirstName} </span>
+                    &nbsp;
+                    <span> {currentUserLastName} </span>
+                </button>
+            </section>
         );
     }
 }
