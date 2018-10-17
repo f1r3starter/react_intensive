@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 
 // Components
 import { withProfile } from "../HOC/withProfile";
-import Catcher from 'components/Catcher';
 import Composer from 'components/Composer';
 import Post from 'components/Post';
 import StatusBar from 'components/StatusBar';
@@ -23,7 +22,7 @@ export default class Feed extends Component {
     };
 
     componentDidMount () {
-        const { currentUserFirstName, currentUserLastName }= this.props;
+        const { currentUserFirstName, currentUserLastName } = this.props;
 
         this._fetchPosts();
         socket.emit('join', GROUP_ID);
