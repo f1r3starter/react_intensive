@@ -1,5 +1,7 @@
 // Core
 import React, { Component } from 'react';
+import { Transition } from 'react-transition-group';
+import { fromTo } from 'gsap';
 
 // Components
 import { withProfile } from "../HOC/withProfile";
@@ -7,6 +9,8 @@ import Composer from 'components/Composer';
 import Post from 'components/Post';
 import StatusBar from 'components/StatusBar';
 import Spinner from 'components/Spinner';
+import Catcher from 'components/Catcher';
+import Postman from 'components/Postman';
 
 // Instruments
 import Styles from './styles.m.css';
@@ -158,19 +162,30 @@ export default class Feed extends Component {
         });
     };
 
+    _animateComposerEnter = (composer) => {
+        fromTo(composer, 1, { opacity: 0, rotationX: 50 }, { opacity: 1, rotationX: 0 });
+    };
+
+    _animatePostmanEnter = (postman) => {
+        fromTo(postman, 1, { opacity: 0, y: 50 }, { opacity: 1, y: 0 });
+    };
+
+    _animatePostmanEntered = (postman) => {
+        fromTo(postman, 1, { opacity: 1, y: 0 }, { opacity: 0, y: 50 });
+    };
+
     render () {
         const { posts, isSpinning } = this.state;
 
         const postsJSX = posts.map((post) => {
             return (
-
-                <Post
-                    _likePost = { this._likePost }
-                    _removePost = { this._removePost }
-                    key = { post.id }
-                    { ...post }
-                />
-
+                <Catcher key = { post.id } >
+                    <Post
+                        { ...post }
+                        _likePost = { this._likePost }
+                        _removePost = { this._removePost }
+                    />
+                </Catcher>
             );
         });
 
@@ -178,7 +193,21 @@ export default class Feed extends Component {
             <section className = { Styles.feed }>
                 <Spinner isSpinning = { isSpinning } />
                 <StatusBar />
-                <Composer _createPost = { this._createPost } />
+                <Transition
+                    appear
+                    in
+                    timeout = { 4000 }
+                    onEnter = { this._animateComposerEnter }>
+                    <Composer _createPost = { this._createPost } />
+                </Transition>
+                <Transition
+                    appear
+                    in
+                    timeout = { 4000 }
+                    onEnter = { this._animatePostmanEnter }
+                    onEntered = { this._animatePostmanEntered }>
+                    <Postman />
+                </Transition>
                 {postsJSX}
             </section>
         );
