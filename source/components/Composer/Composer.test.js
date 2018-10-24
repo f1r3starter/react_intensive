@@ -3,13 +3,17 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { Composer } from './';
 
-const props = {
-    _createPost:          jest.fn(),
-    avatar:               '',
-    currentUserFirstName: '',
-};
+const avatar = 'test.png';
+
+const currentUserFirstName = 'Test User Name';
 
 const comment = 'Test comment';
+
+const props = {
+    _createPost: jest.fn(),
+    avatar,
+    currentUserFirstName,
+};
 
 const initialState = {
     comment: '',
@@ -23,6 +27,8 @@ const result = mount(<Composer { ...props } />);
 
 const _submitCommentSpy = jest.spyOn(result.instance(), '_submitComment');
 const _handleFormSubmitSpy = jest.spyOn(result.instance(), '_handleFormSubmit');
+const _submitOnEnterSpy = jest.spyOn(result.instance(), '_submitOnEnter');
+const _updateCommentSpy = jest.spyOn(result.instance(), '_updateComment');
 
 describe('Composer component:', () => {
     test('should have 1 "section" element', () => {
@@ -37,12 +43,20 @@ describe('Composer component:', () => {
         expect(result.find('textarea')).toHaveLength(1);
     });
 
+    test('textarea placeholder should have proper value', () => {
+        expect(result.find('textarea').prop('placeholder')).toBe(`What's on your mind, ${currentUserFirstName}?`);
+    });
+
     test('should have 1 "input" element', () => {
-        expect(result.find('textarea')).toHaveLength(1);
+        expect(result.find('input')).toHaveLength(1);
     });
 
     test('should have 1 "img" element', () => {
-        expect(result.find('textarea')).toHaveLength(1);
+        expect(result.find('img')).toHaveLength(1);
+    });
+
+    test('image src should be equal to avatar', () => {
+        expect(result.find('img').prop('src')).toBe(avatar);
     });
 
     test('should have valid initial state', () => {
@@ -78,6 +92,10 @@ describe('Composer component:', () => {
         expect(result.state()).toEqual(updatedState);
     });
 
+    test('_updateComment should be invoked once after "textarea" change', () => {
+        expect(_updateCommentSpy).toHaveBeenCalledTimes(1);
+    });
+
     test('should handle form "submit" event', () => {
         result.find('form').simulate('submit');
 
@@ -91,5 +109,20 @@ describe('Composer component:', () => {
     test('_submitComment and _handleFormSubmit should be invoked once after form submitted', () => {
         expect(_submitCommentSpy).toHaveBeenCalledTimes(1);
         expect(_handleFormSubmitSpy).toHaveBeenCalledTimes(1);
+    });
+
+    test('should handle form "submit" event on "Enter" key press', () => {
+        result.find('textarea').simulate('change', {
+            target: {
+                value: comment,
+            },
+        });
+        result.find('textarea').simulate('keyPress', { key: 'Enter' });
+
+        expect(result.state()).toEqual(initialState);
+    });
+
+    test('_submitOnEnter should be invoked once after "Enter" key press', () => {
+        expect(_submitOnEnterSpy).toHaveBeenCalledTimes(1);
     });
 });
