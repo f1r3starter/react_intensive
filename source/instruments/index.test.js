@@ -39,6 +39,11 @@ describe('instruments', () => {
         expect(getUniqueID(13)).toHaveLength(13);
     });
 
+    test('getUniqueID function should return a string with a length of 15 if no argument passed', () => {
+        expect(typeof getUniqueID()).toBe('string');
+        expect(getUniqueID()).toHaveLength(15);
+    });
+
     test('getFullApiUrl function should throw an error, when called with non-string type as first argument', () => {
         expect(() => getFullApiUrl(2, 'hi')).toThrow();
     });
