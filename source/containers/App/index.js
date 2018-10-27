@@ -1,11 +1,14 @@
 // Core
 import React, { Component } from 'react';
 import { hot } from 'react-hot-loader';
+import { Route } from 'react-router-dom';
 
 // Components
 import Catcher from 'components/Catcher';
 import Feed from 'components/Feed';
 import { Provider } from 'components/HOC/withProfile';
+import Profile from 'components/Profile';
+import StatusBar from 'components/StatusBar';
 
 //Instruments
 import avatar from 'theme/assets/lisa';
@@ -22,7 +25,9 @@ export default class App extends Component {
         return (
             <Catcher>
                 <Provider value = { options } >
-                    <Feed />
+                    <StatusBar />
+                    <Route component = { Feed } path = '/feed' />
+                    <Route component = { Profile } path = '/profile' />
                 </Provider>
             </Catcher>
         );
