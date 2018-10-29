@@ -9,6 +9,7 @@ import Feed from 'components/Feed';
 import { Provider } from 'components/HOC/withProfile';
 import Profile from 'components/Profile';
 import StatusBar from 'components/StatusBar';
+import Login from 'components/Login';
 
 //Instruments
 import avatar from 'theme/assets/lisa';
@@ -29,20 +30,42 @@ export default class App extends Component {
 
     componentDidMount () {
         this.setState({
-            isLogged: localStorage.getItem(localStorageIsLogged),
+            isLogged: localStorage.getItem(localStorageIsLogged) === 'logged',
         });
     }
+
+    _login = () => {
+        localStorage.setItem(localStorageIsLogged, 'logged');
+        this.setState({
+            isLogged: true,
+        });
+    };
+
+    _logout = () => {
+        localStorage.setItem(localStorageIsLogged, '');
+        this.setState({
+            isLogged: false,
+        });
+    };
 
     _getPage = () => {
         const { isLogged } = this.state;
 
         return isLogged ? (
+            <>
+                <StatusBar _logout = { this._logout } />
+                <Switch>
+                    <Route component = { Feed } path = '/feed' />
+                    <Route component = { Profile } path = '/profile' />
+                    <Redirect to = '/feed' />
+                </Switch>
+            </>
+        ) : (
             <Switch>
-                <Route component = { Feed } path = '/feed' />
-                <Route component = { Profile } path = '/profile' />
-                <Redirect to = '/feed' />
+                <Route component = { () => <Login _login = { this._login } /> } path = '/login' />
+                <Redirect to = '/login' />
             </Switch>
-        ) : <Profile />;
+        );
     };
 
     render () {
@@ -50,9 +73,8 @@ export default class App extends Component {
 
         return (
             <Catcher>
-                <Provider value = { options } >
-                    <StatusBar />
-                    { page }
+                <Provider value = { options }>
+                    {page}
                 </Provider>
             </Catcher>
         );

@@ -11,9 +11,14 @@ import { withProfile } from "../HOC/withProfile";
 // Instruments
 import Styles from './styles.m.css';
 import { socket } from 'socket/init';
+import { func } from "prop-types";
 
 @withProfile
 export default class StatusBar extends Component {
+    static propTypes = {
+        _logout: func.isRequired,
+    };
+
     state = {
         online: false,
     };
@@ -37,12 +42,18 @@ export default class StatusBar extends Component {
         socket.removeListener('disconnect');
     }
 
+    _logout = () => {
+        const { _logout } = this.props;
+
+        _logout();
+    };
+
     _animateStatusBarEnter = (statusBar) => {
         fromTo(statusBar, 1, { opacity: 0 }, { opacity: 1 });
     };
 
     render () {
-        const { avatar, currentUserFirstName, currentUserLastName } = this.props;
+        const { avatar, currentUserFirstName } = this.props;
         const { online } = this.state;
 
         const statusStyle = cx(Styles.status, {
@@ -68,6 +79,7 @@ export default class StatusBar extends Component {
                         <span> {currentUserFirstName} </span>
                     </Link>
                     <Link to = '/feed'>Feed</Link>
+                    <a onClick = { this._logout }>Logout</a>
                 </section>
             </Transition>
         );
